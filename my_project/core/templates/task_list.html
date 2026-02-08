@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tasks</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+
+  <body>
+    <h1 class="text-3xl font-bold text-center text-gray-700 py-4">Task List</h1>
+    <form method="POST" class="space-y-2 p-2">
+      {% csrf_token %}
+      <div>
+        <label for="title" class="text-md font-semibold text-gray-700"
+          >{{ form.title.label }}</label
+        >
+        <input
+          type="text"
+          name="title"
+          id="title"
+          class="mt-1 w-full border-2 rounded-xs border-slate-300 px-2 py-1"
+        />
+      </div>
+      <div>
+        <label for="description" class="text-md font-semibold text-gray-700"
+          >{{ form.description.label }}</label
+        >
+        <textarea
+          name="description"
+          id="description"
+          rows="3"
+          class="mt-1 w-full border-2 rounded-xs border-slate-300 px-2 py-1"
+        ></textarea>
+      </div>
+
+      <div>
+        <label for="title" class="text-md font-semibold text-gray-700"
+          >{{ form.category.label }}</label
+        >
+        <input
+          type="text"
+          name="category"
+          id="category"
+          class="mt-1 w-full border-2 rounded-xs border-slate-300 px-2 py-1"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="rounded-xs bg-lime-500 hover:bg-lime-600 transition-colors px-4 py-2 text-white font-semibold cursor-pointer"
+      >
+        Adicionar
+      </button>
+    </form>
+    <ul class="flex flex-col gap-2 p-2">
+      {% for task in tasks %}
+      <li class="px-4 py-1 space-y-1 border-2 border-slate-300 rounded-xs">
+        <strong>{{ task.title }}</strong>
+        <p>{{ task.description }}</p>
+        <p class="text-sm text-gray-600">{{ task.category }}</p>
+
+        {% if task.is_done %} ✅ Concluída {% else %} ⏳ Pendente {% endif %}
+      </li>
+      {% empty %}
+      <li>Nenhuma tarefa cadastrada.</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
