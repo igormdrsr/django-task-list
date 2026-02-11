@@ -58,23 +58,20 @@ class RegisterView(View):
     def get(self, request):
         return render(request, "register.html")
 
-
-def complete_task(request, task_id):
-    if request.method == "POST":
-        task = get_object_or_404(Task, id=task_id)
-        task.is_done = True
-        task.save()
-    # task-list é o nome da url definida em urls.py
-    return redirect("task_list")
-
-
-# Dar uma olhada
-# class CompleteTaskView(View):
-#     def post(self, request, task_id):
+# def complete_task(request, task_id):
+#     if request.method == "POST":
 #         task = get_object_or_404(Task, id=task_id)
 #         task.is_done = True
 #         task.save()
-#         return redirect("task-list")
+#     # task-list é o nome da url definida em urls.py
+#     return redirect("task_list")
+
+class CompleteTaskView(View):
+    def post(self, request, task_id):
+        task = get_object_or_404(Task, id=task_id)
+        task.is_done = True
+        task.save()
+        return redirect("task_list")
 
 
 class CreateTaskView(View):
