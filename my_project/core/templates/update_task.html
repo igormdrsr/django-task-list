@@ -8,16 +8,16 @@
 <form method="POST" class="space-y-2 p-2">
     {% csrf_token %}
     <div>
-        <label for="title" class="text-md font-semibold text-gray-700">{{ form.title.label }}</label>
+        <label for="title" class="text-md font-semibold text-gray-800">{{ form.title.label }}</label>
         {{form.title}}
     </div>
     <div>
-        <label for="description" class="text-md font-semibold text-gray-700">{{ form.description.label }}</label>
+        <label for="description" class="text-md font-semibold text-gray-800">{{ form.description.label }}</label>
         {{form.description}}
     </div>
 
     <div>
-        <label for="title" class="text-md font-semibold text-gray-700">{{ form.category.label }}</label>
+        <label for="title" class="text-md font-semibold text-gray-800">{{ form.category.label }}</label>
         {{form.category}}
     </div>
 
