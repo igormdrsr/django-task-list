@@ -45,7 +45,8 @@ class TaskListView(View):
             return redirect("task-list")
 
         tasks = Task.objects.all()
-        return render(request, "task_list.html", {"tasks": tasks, "form": form})
+        context = {"tasks": tasks, "form": form}
+        return render(request, "task_list.html", context)
 
 
 class LoginView(View):
@@ -63,5 +64,43 @@ def complete_task(request, task_id):
         task = get_object_or_404(Task, id=task_id)
         task.is_done = True
         task.save()
-    #task-list é o nome da url definida em urls.py
-    return redirect("task-list")
+    # task-list é o nome da url definida em urls.py
+    return redirect("task_list")
+
+
+# Dar uma olhada
+# class CompleteTaskView(View):
+#     def post(self, request, task_id):
+#         task = get_object_or_404(Task, id=task_id)
+#         task.is_done = True
+#         task.save()
+#         return redirect("task-list")
+
+
+class CreateTaskView(View):
+    def get(self, request):
+        form = TaskForm()
+
+        context = {"form": form}
+        return render(request, "create_task.html", context)
+
+    def post(self, request):
+        form = TaskForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect("task_list")
+        
+class UpdateTaskView(View):
+    def get(self, request, task_id):
+        task = get_object_or_404(Task, id=task_id)
+        form = TaskForm(instance=task)
+
+        context = {"form": form}
+        return render(request, "update_task.html", context)
+    def post (self, request, task_id):
+        task = get_object_or_404(Task, id=task_id)
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            return redirect("task_list")

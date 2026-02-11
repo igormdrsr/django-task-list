@@ -12,3 +12,6 @@ class Task(models.Model):
         #This method is used to return a string representation of the object. In this case, it returns the title of the task. 
         #It defines how the object will be displayed in the Django admin interface and other places where the object is represented as a string.
         return self.title
+    
+# Criar model para unificar as demandas em uma lista
+# Criar model para categorias

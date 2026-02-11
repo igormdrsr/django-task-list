@@ -10,52 +10,40 @@
 
 <body class="bg-gray-100 min-h-screen">
   <div class="max-w-3xl mx-auto p-6">
-    <h1 class="text-3xl font-bold text-center text-gray-700 py-4">
+    <h1 class="text-5xl font-bold text-center text-gray-700 py-4">
       Task List
     </h1>
-    <form method="POST" class="space-y-2 p-2">
-      {% csrf_token %}
-      <div>
-        <label for="title" class="text-md font-semibold text-gray-700">{{ form.title.label }}</label>
-        <input type="text" name="title" id="title" class="mt-1 w-full border-2 rounded-xs border-slate-300 px-2 py-1"
-          placeholder="Comprar ingredientes..." />
-      </div>
-      <div>
-        <label for="description" class="text-md font-semibold text-gray-700">{{ form.description.label }}</label>
-        <textarea name="description" id="description" rows="3"
-          class="mt-1 w-full border-2 rounded-xs border-slate-300 px-2 py-1"
-          placeholder="Descreva a tarefa..."></textarea>
-      </div>
-
-      <div>
-        <label for="title" class="text-md font-semibold text-gray-700">{{ form.category.label }}</label>
-        <input type="text" name="category" id="category"
-          class="mt-1 w-full border-2 rounded-xs border-slate-300 px-2 py-1" placeholder="Trabalho, Pessoal..." />
-      </div>
-
-      <button type="submit"
-        class="rounded-[.25rem] bg-sky-500 hover:bg-sky-600 transition-colors px-4 py-2 text-white font-semibold cursor-pointer">
-        Adicionar
-      </button>
-    </form>
+    <div class="flex justify-end">
+      <a href="{% url 'create_task' %}" class="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded">
+        New task
+      </a>
+    </div>
     <ul class="space-y-4 mt-6">
       {% for task in tasks %}
       <li class="bg-white rounded-[.25rem] shadow-sm p-5">
-
         <div class="flex justify-between items-center">
-                  <h3 class="text-lg font-semibold text-gray-800">
-          {{ task.title }}
-        </h3>
+          <h3 class="text-lg font-semibold text-gray-800">
+            {{ task.title }}
+          </h3>
 
-        {% if not task.is_done %}
-        <form method="POST" action="{% url 'complete_task' task.id %}">
-          {% csrf_token %}
-          <button type="submit"
-            class="rounded-[.25rem] bg-lime-500 hover:bg-lime-600 transition-colors px-2 py-1 text-white font-semibold cursor-pointer">
-            Concluir
-          </button>
-        </form>
-        {% endif %}
+          <div class="flex gap-2">
+            <form method="GET" action="{% url 'update_task' task.id %}">
+              {% csrf_token %}
+              <button type="submit"
+                class="rounded-[.25rem] bg-yellow-500 hover:bg-yellow-600 transition-colors px-2 py-1 text-white font-semibold cursor-pointer">
+                Editar
+              </button>
+            </form>
+            {% if not task.is_done %}
+            <form method="POST" action="{% url 'complete_task' task.id %}">
+              {% csrf_token %}
+              <button type="submit"
+                class="rounded-[.25rem] bg-lime-500 hover:bg-lime-600 transition-colors px-2 py-1 text-white font-semibold cursor-pointer">
+                Concluir
+              </button>
+            </form>
+            {% endif %}
+          </div>
         </div>
 
         <p class="text-gray-600 text-sm mt-1">{{ task.description }}</p>
@@ -75,7 +63,6 @@
           </span>
           {% endif %}
         </div>
-
       </li>
       {% empty %}
       <p class="text-gray-500">Nenhuma tarefa cadastrada.</p>
