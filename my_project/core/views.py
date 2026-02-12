@@ -88,6 +88,9 @@ class CreateTaskView(View):
             form.save()
             return redirect("task_list")
         
+        context = {"form": form}
+        return render(request, "create_task.html", context)
+        
 class UpdateTaskView(View):
     def get(self, request, task_id):
         task = get_object_or_404(Task, id=task_id)
@@ -95,9 +98,14 @@ class UpdateTaskView(View):
 
         context = {"form": form}
         return render(request, "update_task.html", context)
+    
     def post (self, request, task_id):
         task = get_object_or_404(Task, id=task_id)
         form = TaskForm(request.POST, instance=task)
+        
         if form.is_valid():
             form.save()
             return redirect("task_list")
+
+        context = {"form": form}
+        return render(request, "update_task.html", context)
