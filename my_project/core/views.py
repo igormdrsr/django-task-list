@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
+from django.contrib.auth.models import User
 from .models import Task
-from .forms import TaskForm
+from .forms import TaskForm, RegisterForm
+
 
 
 # Create your views here.
@@ -109,3 +111,21 @@ class UpdateTaskView(View):
 
         context = {"form": form}
         return render(request, "update_task.html", context)
+    
+class RegisterView(View):
+    def get(self, request):
+        context = {"form": RegisterForm()}
+        return render(request, "register.html", context)
+    
+    def post(self, request):
+        form = RegisterForm(request.POST)
+
+        if form.is_valid():
+            User.objects.create_user(
+                username=form.cleaned_data["username"],
+                password=form.cleaned_data["password"]
+            )
+        
+            return redirect("login")
+        context = {"form": form}
+        return render(request, "register.html", context)

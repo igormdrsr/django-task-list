@@ -8,21 +8,21 @@
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-zinc-900 min-h-screen">
   <div class="max-w-3xl mx-auto p-6">
-    <h1 class="text-5xl font-bold text-center text-gray-700 py-4">
+    <h1 class="text-5xl font-bold text-center text-zinc-100 py-4">
       Task List
     </h1>
     <div class="flex justify-end">
-      <a href="{% url 'create_task' %}" class="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded">
+      <a href="{% url 'create_task' %}" class="dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold transition-colors">
         New task
       </a>
     </div>
     <ul class="space-y-4 mt-6">
       {% for task in tasks %}
-      <li class="bg-white rounded-[.25rem] shadow-sm p-5">
+      <li class="bg-zinc-800 rounded-[.25rem] shadow-sm p-5 text-zinc-300">
         <div class="flex justify-between items-center mb-3">
-          <h3 class="text-lg font-semibold text-gray-800">
+          <h3 class="text-lg font-semibold text-zinc-100">
             {{ task.title }}
           </h3>
 
@@ -30,7 +30,7 @@
             <form method="GET" action="{% url 'update_task' task.id %}">
               {% csrf_token %}
               <button type="submit"
-                class="rounded-[.25rem] bg-yellow-500 hover:bg-yellow-600 transition-colors px-2 py-1 text-white font-semibold cursor-pointer">
+                class="rounded-[.25rem] dark:bg-amber-500 dark:hover:bg-amber-600 transition-colors px-2 py-1 text-white font-semibold cursor-pointer">
                 Editar
               </button>
             </form>
@@ -46,15 +46,15 @@
           </div>
         </div>
 
-        <p class="text-gray-600 text-sm mt-1">{{ task.description }}</p>
+        <p class="text-zinc-400 text-sm mt-1">{{ task.description }}</p>
 
         <div class="flex items-center gap-4 mt-3 text-sm">
           <div>
-            <span class="text-gray-500"> {{ task.category }} </span>
+            <span class="text-zinc-300"> {{ task.category }} </span>
           </div>
 
           {% if task.is_done %}
-          <span class="text-green-600 font-medium flex items-center gap-1">
+          <span class="text-emerald-400 font-medium flex items-center gap-1">
             ✅ Concluída
           </span>
           {% else %}
