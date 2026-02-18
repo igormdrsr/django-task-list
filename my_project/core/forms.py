@@ -85,3 +85,27 @@ class RegisterForm(forms.Form):
             raise forms.ValidationError({"username": "Nome de usuário já existe."})
         
         return username
+
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        max_length=150,
+        label = "Usuário",
+        widget=forms.TextInput(
+            attrs={
+                "class": "mt-1 w-full border-2 rounded-xs border-slate-300 px-2 py-1",
+                "placeholder": "Digite seu nome de usuário",
+                "id": "username-input",
+            }
+        )
+    )
+
+    password  = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "mt-1 w-full border-2 rounded-xs border-slate-300 px-2 py-1",
+                "placeholder": "Digite sua senha",
+                "id": "password-input",
+            }
+        ),
+        label="Senha"
+    )

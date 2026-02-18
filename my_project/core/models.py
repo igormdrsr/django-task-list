@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Task(models.Model):
@@ -7,6 +8,12 @@ class Task(models.Model):
     is_done = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     category = models.CharField(max_length=100, blank=True, null=True) #New field for category
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        # The related_name attribute specifies the name of the reverse relation from the User model back to the Task model.
+        related_name="tasks",
+    )
 
     def __str__(self):
         #This method is used to return a string representation of the object. In this case, it returns the title of the task. 

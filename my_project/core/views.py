@@ -1,82 +1,28 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 from .models import Task
-from .forms import TaskForm, RegisterForm
-
+from .forms import LoginForm, TaskForm, RegisterForm
 
 
 # Create your views here.
-def home(request):
-    return render(request, "home.html")
-
-
-def about(request):
-    return render(request, "about.html")
-
-
-# def task_list(request):
-#     tasks = Task.objects.all()
-
-#     context = {
-#         "tasks": tasks
-#     }
-
-#     return render(request, "task_list.html", context)
-
-
-# class TaskListView(ListView):
-#     model = Task
-#     template_name = "task_list.html"
-#     context_object_name = "tasks"
-
-
-class TaskListView(View):
+class TaskListView(LoginRequiredMixin, View):
     def get(self, request):
-        tasks = Task.objects.all()
-        form = TaskForm()
+        tasks = Task.objects.filter(user=request.user)
 
-        context = {"tasks": tasks, "form": form}
+        context = {"tasks": tasks}
         return render(request, "task_list.html", context)
-
-    def post(self, request):
-        form = TaskForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-            return redirect("task-list")
-
-        tasks = Task.objects.all()
-        context = {"tasks": tasks, "form": form}
-        return render(request, "task_list.html", context)
-
-
-class LoginView(View):
-    def get(self, request):
-        return render(request, "login.html")
-
-
-class RegisterView(View):
-    def get(self, request):
-        return render(request, "register.html")
-
-# def complete_task(request, task_id):
-#     if request.method == "POST":
-#         task = get_object_or_404(Task, id=task_id)
-#         task.is_done = True
-#         task.save()
-#     # task-list é o nome da url definida em urls.py
-#     return redirect("task_list")
 
 class CompleteTaskView(View):
     def post(self, request, task_id):
-        task = get_object_or_404(Task, id=task_id)
+        task = get_object_or_404(Task, id=task_id, user=request.user)
         task.is_done = True
         task.save()
         return redirect("task_list")
 
-
-class CreateTaskView(View):
+class CreateTaskView(LoginRequiredMixin, View):
     def get(self, request):
         form = TaskForm()
 
@@ -87,45 +33,79 @@ class CreateTaskView(View):
         form = TaskForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            task = form.save(commit=False)
+            task.user = request.user
+            task.save()
             return redirect("task_list")
-        
+
         context = {"form": form}
         return render(request, "create_task.html", context)
-        
-class UpdateTaskView(View):
+
+
+class UpdateTaskView(LoginRequiredMixin, View):
     def get(self, request, task_id):
-        task = get_object_or_404(Task, id=task_id)
+        task = get_object_or_404(Task, id=task_id, user=request.user)
         form = TaskForm(instance=task)
 
         context = {"form": form}
         return render(request, "update_task.html", context)
-    
-    def post (self, request, task_id):
-        task = get_object_or_404(Task, id=task_id)
+
+    def post(self, request, task_id):
+        task = get_object_or_404(Task, id=task_id, user=request.user)
         form = TaskForm(request.POST, instance=task)
-        
+
         if form.is_valid():
             form.save()
             return redirect("task_list")
 
         context = {"form": form}
         return render(request, "update_task.html", context)
-    
+
+
 class RegisterView(View):
     def get(self, request):
         context = {"form": RegisterForm()}
         return render(request, "register.html", context)
-    
+
     def post(self, request):
         form = RegisterForm(request.POST)
 
         if form.is_valid():
             User.objects.create_user(
                 username=form.cleaned_data["username"],
-                password=form.cleaned_data["password"]
+                password=form.cleaned_data["password"],
             )
-        
+
             return redirect("login")
         context = {"form": form}
         return render(request, "register.html", context)
+
+
+class LoginView(View):
+    def get(self, request):
+        form = LoginForm()
+        context = {"form": form}
+        return render(request, "login.html", context)
+
+    def post(self, request):
+        form = LoginForm(request.POST)
+
+        if form.is_valid():
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
+
+            user = authenticate(request, username=username, password=password)
+
+            if user:
+                login(request, user)
+                return redirect("task_list")
+            
+            form.add_error(None, "Invalid username or password.")
+
+        context = {"form": form}
+        return render(request, "login.html", context)
+    
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect("login")
