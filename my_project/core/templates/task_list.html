@@ -17,13 +17,31 @@
         Seja bem-vindo, <span class="capitalize font-bold text-zinc-100">{{ request.user.username }}</span>!
       </p>
       {% endif %}
-      <div class="flex justify-end">
+      <div class="flex justify-between align-center gap-2 mt-4">
         <a
           href="{% url 'create_task' %}"
           class="dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold transition-colors"
         >
           New task
         </a>
+        {% if request.user.is_authenticated %}
+        <form method="POST" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button
+            type="submit"
+            class="dark:bg-red-600 dark:hover:bg-red-700 text-white px-4 py-2 rounded font-semibold transition-colors cursor-pointer"
+          >
+            Logout
+          </button>
+        </form>
+        {% else %}
+        <a
+          href="{% url 'login' %}"
+          class="dark:bg-green-600 dark:hover:bg-green-700 text-white px-4 py-2 rounded font-semibold transition-colors"
+        >
+          Login
+        </a>
+        {% endif %}
       </div>
       <ul class="space-y-4 mt-6">
         {% for task in tasks %}

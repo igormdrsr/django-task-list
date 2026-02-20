@@ -92,8 +92,8 @@ class LoginForm(forms.Form):
         label = "Usuário",
         widget=forms.TextInput(
             attrs={
-                "class": "mt-1 w-full border-2 rounded-xs border-slate-300 px-2 py-1",
-                "placeholder": "Digite seu nome de usuário",
+                "class": "bg-gray-700 mt-1 w-full border border-gray-600 rounded-[.25rem] px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition",
+                "placeholder": "Type your username",
                 "id": "username-input",
             }
         )
@@ -102,8 +102,8 @@ class LoginForm(forms.Form):
     password  = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "class": "mt-1 w-full border-2 rounded-xs border-slate-300 px-2 py-1",
-                "placeholder": "Digite sua senha",
+                "class": "bg-gray-700 mt-1 w-full border border-gray-600 rounded-[.25rem] px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition",
+                "placeholder": "Type your password",
                 "id": "password-input",
             }
         ),

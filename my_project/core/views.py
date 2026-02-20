@@ -15,12 +15,14 @@ class TaskListView(LoginRequiredMixin, View):
         context = {"tasks": tasks}
         return render(request, "task_list.html", context)
 
+
 class CompleteTaskView(View):
     def post(self, request, task_id):
         task = get_object_or_404(Task, id=task_id, user=request.user)
         task.is_done = True
         task.save()
         return redirect("task_list")
+
 
 class CreateTaskView(LoginRequiredMixin, View):
     def get(self, request):
@@ -33,11 +35,12 @@ class CreateTaskView(LoginRequiredMixin, View):
         form = TaskForm(request.POST)
 
         if form.is_valid():
+            # The save(commit=False) method is used to create a Task instance from the form data without saving it to the database immediately. This allows you to modify the instance before saving it.
+            # It create a task object from the form data but does not save it to the database yet. This allows you to set additional fields (like user) before saving the object.
             task = form.save(commit=False)
             task.user = request.user
             task.save()
             return redirect("task_list")
-
         context = {"form": form}
         return render(request, "create_task.html", context)
 
@@ -99,13 +102,14 @@ class LoginView(View):
             if user:
                 login(request, user)
                 return redirect("task_list")
-            
+
             form.add_error(None, "Invalid username or password.")
 
         context = {"form": form}
         return render(request, "login.html", context)
-    
+
+
 class LogoutView(View):
-    def get(self, request):
+    def post(self, request):
         logout(request)
         return redirect("login")
